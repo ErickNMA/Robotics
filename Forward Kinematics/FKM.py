@@ -1,5 +1,11 @@
 from sympy import *
 
+def arredNUM(matrix):
+    for a in preorder_traversal(matrix):
+        if isinstance(a, Float):
+            matrix = matrix.subs(a, round(a, 3))
+    return matrix
+
 def A(tn, dn, an, aln):
     M = Matrix([
             [ cos(tn), -sin(tn)*round(cos(aln),3), sin(tn)*round(sin(aln),3), an*cos(tn) ], 
@@ -10,9 +16,7 @@ def A(tn, dn, an, aln):
     
     M.simplify()
     M = trigsimp(M)
-    for a in preorder_traversal(M):
-        if isinstance(a, Float):
-            M = M.subs(a, round(a, 2))
+    M = arredNUM(M)
     return M
 
 #Thetas do diagrama de arrames
@@ -46,16 +50,13 @@ l6 = Symbol('l₆')
 ls = [l1, l2, l3, l4, l5, l6]
 
 def printMatrix(M):
-    print('\n------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
+    print('\n----------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
+    print('\n\n\n')
     for i in range(4):
         for j in range(4):
-            print(str(M[(4*i)+j]), end='')
-            if(isinstance(M[(4*i)+j], Number)):
-                print('\t\t\t\t\t', end='')
-            else:
-                print('\t\t\t\t', end='')
-        print('\n\n')
-    print('\n------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
+            print(f'\t{str(M[i][j]):^30}', end='')
+        print('\n\n\n')
+    print('\n----------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
 
 class Robot():
     T = []
@@ -91,14 +92,26 @@ class Robot():
             self.rotational.append(False)
         except:
             self.rotational.append(True)
-
-    def showHTM(self, a, b):
+    
+    def getHTM(self, a, b):
         O = Matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
         for i in range(b-a):
             O = simplify(O@self.T[a+i])
-        printMatrix(O)
+
+        return arredNUM(O).tolist()
     
-    def showPose(self, joints, links=None):
+    def showHTM(self, a, b):
+        printMatrix(self.getHTM(a, b))
+    
+    def showHTMElements(self, a, b):
+        O = self.getHTM(a, b)
+        print('\n----------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
+        for j in range(4):
+            for i in range(4):
+                print('a'+str(i+1)+str(j+1)+'\t = \t'+str(O[i][j])+'\n')
+            print('----------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
+    
+    def getPose(self, joints, links=None):
         pose = Matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
         for i in range(len(joints)):
             pose = simplify(pose@self.T[i])
@@ -112,4 +125,7 @@ class Robot():
                 pose = pose.subs(ds[i], joints[i])
 
         pose.simplify()
-        printMatrix(pose)
+        return arredNUM(pose).tolist()
+    
+    def showPose(self, joints, links=None):
+        printMatrix(self.getPose(joints, links))
