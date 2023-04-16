@@ -1,5 +1,7 @@
 from sympy import *
 
+init_printing()
+
 def arredNUM(matrix):
     for a in preorder_traversal(matrix):
         if isinstance(a, Float):
@@ -49,18 +51,89 @@ l6 = Symbol('l₆')
 
 ls = [l1, l2, l3, l4, l5, l6]
 
-def printMatrix(M):
-    print('\n----------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
-    print('\n\n\n')
-    for i in range(4):
-        for j in range(4):
-            print(f'\t{str(M[i][j]):^30}', end='')
-        print('\n\n\n')
-    print('\n----------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
+def abrev(M):
+    O = M.subs(cos(theta1+theta2+theta3), Symbol('c123'))
+    O = O.subs(cos(theta1+theta2+theta4), Symbol('c124'))
+    O = O.subs(cos(theta1+theta2+theta5), Symbol('c125'))
+    O = O.subs(cos(theta1+theta2+theta6), Symbol('c126'))
+    O = O.subs(cos(theta1+theta3+theta4), Symbol('c134'))
+    O = O.subs(cos(theta1+theta3+theta5), Symbol('c135'))
+    O = O.subs(cos(theta1+theta3+theta6), Symbol('c136'))
+    O = O.subs(cos(theta1+theta4+theta5), Symbol('c145'))
+    O = O.subs(cos(theta1+theta4+theta6), Symbol('c146'))
+    O = O.subs(cos(theta1+theta5+theta6), Symbol('c156'))
+    O = O.subs(cos(theta2+theta3+theta4), Symbol('c234'))
+    O = O.subs(cos(theta2+theta3+theta5), Symbol('c235'))
+    O = O.subs(cos(theta2+theta3+theta6), Symbol('c236'))
+    O = O.subs(cos(theta3+theta4+theta5), Symbol('c345'))
+    O = O.subs(cos(theta3+theta4+theta6), Symbol('c346'))
+    O = O.subs(cos(theta4+theta5+theta6), Symbol('c456'))
+    O = O.subs(cos(theta1+theta2), Symbol('c12'))
+    O = O.subs(cos(theta1+theta3), Symbol('c13'))
+    O = O.subs(cos(theta1+theta4), Symbol('c14'))
+    O = O.subs(cos(theta1+theta5), Symbol('c15'))
+    O = O.subs(cos(theta1+theta6), Symbol('c16'))
+    O = O.subs(cos(theta2+theta3), Symbol('c23'))
+    O = O.subs(cos(theta2+theta4), Symbol('c24'))
+    O = O.subs(cos(theta2+theta5), Symbol('c25'))
+    O = O.subs(cos(theta2+theta6), Symbol('c26'))
+    O = O.subs(cos(theta3+theta4), Symbol('c34'))
+    O = O.subs(cos(theta3+theta5), Symbol('c35'))
+    O = O.subs(cos(theta3+theta6), Symbol('c36'))
+    O = O.subs(cos(theta4+theta5), Symbol('c45'))
+    O = O.subs(cos(theta4+theta6), Symbol('c46'))
+    O = O.subs(cos(theta5+theta6), Symbol('c56'))
+    O = O.subs(cos(theta1), Symbol('c1'))
+    O = O.subs(cos(theta2), Symbol('c2'))
+    O = O.subs(cos(theta3), Symbol('c3'))
+    O = O.subs(cos(theta4), Symbol('c4'))
+    O = O.subs(cos(theta5), Symbol('c5'))
+    O = O.subs(cos(theta6), Symbol('c6'))
+
+    O = O.subs(sin(theta1+theta2+theta3), Symbol('s123'))
+    O = O.subs(sin(theta1+theta2+theta4), Symbol('s124'))
+    O = O.subs(sin(theta1+theta2+theta5), Symbol('s125'))
+    O = O.subs(sin(theta1+theta2+theta6), Symbol('s126'))
+    O = O.subs(sin(theta1+theta3+theta4), Symbol('s134'))
+    O = O.subs(sin(theta1+theta3+theta5), Symbol('s135'))
+    O = O.subs(sin(theta1+theta3+theta6), Symbol('s136'))
+    O = O.subs(sin(theta1+theta4+theta5), Symbol('s145'))
+    O = O.subs(sin(theta1+theta4+theta6), Symbol('s146'))
+    O = O.subs(sin(theta1+theta5+theta6), Symbol('s156'))
+    O = O.subs(sin(theta2+theta3+theta4), Symbol('s234'))
+    O = O.subs(sin(theta2+theta3+theta5), Symbol('s235'))
+    O = O.subs(sin(theta2+theta3+theta6), Symbol('s236'))
+    O = O.subs(sin(theta3+theta4+theta5), Symbol('s345'))
+    O = O.subs(sin(theta3+theta4+theta6), Symbol('s346'))
+    O = O.subs(sin(theta4+theta5+theta6), Symbol('s456'))
+    O = O.subs(sin(theta1+theta2), Symbol('s12'))
+    O = O.subs(sin(theta1+theta3), Symbol('s13'))
+    O = O.subs(sin(theta1+theta4), Symbol('s14'))
+    O = O.subs(sin(theta1+theta5), Symbol('s15'))
+    O = O.subs(sin(theta1+theta6), Symbol('s16'))
+    O = O.subs(sin(theta2+theta3), Symbol('s23'))
+    O = O.subs(sin(theta2+theta4), Symbol('s24'))
+    O = O.subs(sin(theta2+theta5), Symbol('s25'))
+    O = O.subs(sin(theta2+theta6), Symbol('s26'))
+    O = O.subs(sin(theta3+theta4), Symbol('s34'))
+    O = O.subs(sin(theta3+theta5), Symbol('s35'))
+    O = O.subs(sin(theta3+theta6), Symbol('s36'))
+    O = O.subs(sin(theta4+theta5), Symbol('s45'))
+    O = O.subs(sin(theta4+theta6), Symbol('s46'))
+    O = O.subs(sin(theta5+theta6), Symbol('s56'))
+    O = O.subs(sin(theta1), Symbol('s1'))
+    O = O.subs(sin(theta2), Symbol('s2'))
+    O = O.subs(sin(theta3), Symbol('s3'))
+    O = O.subs(sin(theta4), Symbol('s4'))
+    O = O.subs(sin(theta5), Symbol('s5'))
+    O = O.subs(sin(theta6), Symbol('s6'))
+
+    return O
 
 class Robot():
     T = []
     rotational = []
+    H = []
     def __init__(self, DH=None):
         if(DH):
             for i in DH:
@@ -80,7 +153,7 @@ class Robot():
             self.rotational.append(True)
 
     def addNonDHLine(self, dx, dy, dz, Rx, Ry, Rz):
-        O = Matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+        O = Identity(4)
         O = O@Matrix([[1, 0, 0, 0], [0, cos(Rx), -sin(Rx), 0], [0, sin(Rx), cos(Rx), 0], [0, 0, 0, 1]]) #Rotação em X
         O = O@Matrix([[cos(Ry), 0, sin(Ry), 0], [0, 1, 0, 0], [-sin(Ry), 0, cos(Ry), 0], [0, 0, 0, 1]]) #Rotação em Y
         O = O@Matrix([[cos(Rz), -sin(Rz), 0, 0], [sin(Rz), cos(Rx), 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]) #Rotação em Z
@@ -93,28 +166,34 @@ class Robot():
         except:
             self.rotational.append(True)
     
-    def getHTM(self, a, b):
-        O = Matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
+    def HTM(self, a, b):
+        if((a==0) and (b==len(self.T))):
+            if(len(self.H)):
+                return abrev(self.H)
+        O = Identity(4)
         for i in range(b-a):
             O = simplify(O@self.T[a+i])
-
-        return arredNUM(O).tolist()
+        self.H = arredNUM(O)
+        return abrev(self.H)
     
-    def showHTM(self, a, b):
-        printMatrix(self.getHTM(a, b))
-    
+    '''
     def showHTMElements(self, a, b):
-        O = self.getHTM(a, b)
+        O = self.HTM(a, b).tolist()
         print('\n----------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
         for j in range(4):
             for i in range(4):
                 print('a'+str(i+1)+str(j+1)+'\t = \t'+str(O[i][j])+'\n')
             print('----------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
-    
-    def getPose(self, joints, links=None):
-        pose = Matrix([[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]])
-        for i in range(len(joints)):
-            pose = simplify(pose@self.T[i])
+    '''
+
+    def POSE(self, joints, links=None):
+        if(not len(self.H)):
+            pose = Identity(4)
+            for i in range(len(joints)):
+                pose = simplify(pose@self.T[i])
+            self.H = pose
+        else:
+            pose = self.H
         if(links):
             for i in range(len(links)):
                 pose = pose.subs(ls[i], links[i])
@@ -123,9 +202,5 @@ class Robot():
                 pose = pose.subs(thetas[i], joints[i])
             else:
                 pose = pose.subs(ds[i], joints[i])
-
         pose.simplify()
-        return arredNUM(pose).tolist()
-    
-    def showPose(self, joints, links=None):
-        printMatrix(self.getPose(joints, links))
+        return pose
