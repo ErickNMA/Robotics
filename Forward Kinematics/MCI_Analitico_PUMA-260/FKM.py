@@ -68,6 +68,21 @@ def abrev(M):
     O = O.subs(cos(theta3+theta4+theta5), Symbol('c345'))
     O = O.subs(cos(theta3+theta4+theta6), Symbol('c346'))
     O = O.subs(cos(theta4+theta5+theta6), Symbol('c456'))
+    O = O.subs(cos(theta1-theta2), Symbol('c_{(1-2)}'))
+    O = O.subs(cos(theta1-theta3), Symbol('c_{(1-3)}'))
+    O = O.subs(cos(theta1-theta4), Symbol('c_{(1-4)}'))
+    O = O.subs(cos(theta1-theta5), Symbol('c_{(1-5)}'))
+    O = O.subs(cos(theta1-theta6), Symbol('c_{(1-6)}'))
+    O = O.subs(cos(theta2-theta3), Symbol('c_{(2-3)}'))
+    O = O.subs(cos(theta2-theta4), Symbol('c_{(2-4)}'))
+    O = O.subs(cos(theta2-theta5), Symbol('c_{(2-5)}'))
+    O = O.subs(cos(theta2-theta6), Symbol('c_{(2-6)}'))
+    O = O.subs(cos(theta3-theta4), Symbol('c_{(3-4)}'))
+    O = O.subs(cos(theta3-theta5), Symbol('c_{(3-5)}'))
+    O = O.subs(cos(theta3-theta6), Symbol('c_{(3-6)}'))
+    O = O.subs(cos(theta4-theta5), Symbol('c_{(4-5)}'))
+    O = O.subs(cos(theta4-theta6), Symbol('c_{(4-6)}'))
+    O = O.subs(cos(theta5-theta6), Symbol('c_{(5-6)}'))
     O = O.subs(cos(theta1+theta2), Symbol('c12'))
     O = O.subs(cos(theta1+theta3), Symbol('c13'))
     O = O.subs(cos(theta1+theta4), Symbol('c14'))
@@ -106,6 +121,21 @@ def abrev(M):
     O = O.subs(sin(theta3+theta4+theta5), Symbol('s345'))
     O = O.subs(sin(theta3+theta4+theta6), Symbol('s346'))
     O = O.subs(sin(theta4+theta5+theta6), Symbol('s456'))
+    O = O.subs(sin(theta1-theta2), Symbol('s_{(1-2)}'))
+    O = O.subs(sin(theta1-theta3), Symbol('s_{(1-3)}'))
+    O = O.subs(sin(theta1-theta4), Symbol('s_{(1-4)}'))
+    O = O.subs(sin(theta1-theta5), Symbol('s_{(1-5)}'))
+    O = O.subs(sin(theta1-theta6), Symbol('s_{(1-6)}'))
+    O = O.subs(sin(theta2-theta3), Symbol('s_{(2-3)}'))
+    O = O.subs(sin(theta2-theta4), Symbol('s_{(2-4)}'))
+    O = O.subs(sin(theta2-theta5), Symbol('s_{(2-5)}'))
+    O = O.subs(sin(theta2-theta6), Symbol('s_{(2-6)}'))
+    O = O.subs(sin(theta3-theta4), Symbol('s_{(3-4)}'))
+    O = O.subs(sin(theta3-theta5), Symbol('s_{(3-5)}'))
+    O = O.subs(sin(theta3-theta6), Symbol('s_{(3-6)}'))
+    O = O.subs(sin(theta4-theta5), Symbol('s_{(4-5)}'))
+    O = O.subs(sin(theta4-theta6), Symbol('s_{(4-6)}'))
+    O = O.subs(sin(theta5-theta6), Symbol('s_{(5-6)}'))
     O = O.subs(sin(theta1+theta2), Symbol('s12'))
     O = O.subs(sin(theta1+theta3), Symbol('s13'))
     O = O.subs(sin(theta1+theta4), Symbol('s14'))
@@ -138,33 +168,54 @@ class Robot():
         if(DH):
             for i in DH:
                 self.T.append(A(i[0], i[1], i[2], i[3]))
-                try:
-                    Float(i[0])
-                    self.rotational.append(False)
+                rot = False
+                pris = False
+                try: 
+                    float(i[0])
                 except:
-                    self.rotational.append(True)
+                    rot = True
+                try:
+                    float(i[1])
+                except:
+                    pris = True
+                if(rot or pris):
+                    self.rotational.append(rot)
     
     def addDHLine(self, ti, di, ai, ali):
         self.T.append(A(ti, di, ai, ali))
-        try:
-            Float(ti)
-            self.rotational.append(False)
+        rot = False
+        pris = False
+        try: 
+            float(ti)
         except:
-            self.rotational.append(True)
+            rot = True
+        try:
+            float(di)
+        except:
+            pris = True
+        if(rot or pris):
+            self.rotational.append(rot)
 
     def addNonDHLine(self, dx, dy, dz, Rx, Ry, Rz):
         O = Identity(4)
+        O = O@Matrix([[1, 0, 0, dx], [0, 1, 0, dy], [0, 0, 1, dz], [0, 0, 0, 1]]) #Translação
         O = O@Matrix([[1, 0, 0, 0], [0, cos(Rx), -sin(Rx), 0], [0, sin(Rx), cos(Rx), 0], [0, 0, 0, 1]]) #Rotação em X
         O = O@Matrix([[cos(Ry), 0, sin(Ry), 0], [0, 1, 0, 0], [-sin(Ry), 0, cos(Ry), 0], [0, 0, 0, 1]]) #Rotação em Y
-        O = O@Matrix([[cos(Rz), -sin(Rz), 0, 0], [sin(Rz), cos(Rx), 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]) #Rotação em Z
-        O = O@Matrix([[1, 0, 0, dx], [0, 1, 0, dy], [0, 0, 1, dz], [0, 0, 0, 1]]) #Translação
+        O = O@Matrix([[cos(Rz), -sin(Rz), 0, 0], [sin(Rz), cos(Rz), 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]) #Rotação em Z
         O.simplify()
         self.T.append(O)
-        try:
-            Float(Rz)
-            self.rotational.append(False)
+        rot = False
+        pris = False
+        try: 
+            float(Rz)
         except:
-            self.rotational.append(True)
+            rot = True
+        try:
+            float(dz)
+        except:
+            pris = True
+        if(rot or pris):
+            self.rotational.append(rot)
     
     def HTM(self, a, b):
         if((a==0) and (b==len(self.T))):
@@ -175,16 +226,6 @@ class Robot():
             O = simplify(O@self.T[a+i])
         self.H = arredNUM(O)
         return abrev(self.H)
-    
-    '''
-    def showHTMElements(self, a, b):
-        O = self.HTM(a, b).tolist()
-        print('\n----------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
-        for j in range(4):
-            for i in range(4):
-                print('a'+str(i+1)+str(j+1)+'\t = \t'+str(O[i][j])+'\n')
-            print('----------------------------------------------------------------------------------------------------------------------------------------------------------------\n')
-    '''
 
     def POSE(self, joints, links=None):
         if(not len(self.H)):
