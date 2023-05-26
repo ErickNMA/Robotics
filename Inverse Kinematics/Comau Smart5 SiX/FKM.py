@@ -224,8 +224,9 @@ class Robot():
         O = Identity(4)
         for i in range(b-a):
             O = simplify(O@self.T[a+i])
-        self.H = arredNUM(O)
-        return abrev(self.H)
+        if((a==0) and (b==len(self.T))):
+            self.H = arredNUM(O)
+        return abrev(O)
 
     def POSE(self, joints, links=None):
         if(not len(self.H)):
