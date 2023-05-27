@@ -245,4 +245,5 @@ class Robot():
             else:
                 pose = pose.subs(ds[i], joints[i])
         pose.simplify()
-        return pose
+        pose = arredNUM(simplify(pose.subs(pi, 3.14159)))
+        return trigsimp(pose)
