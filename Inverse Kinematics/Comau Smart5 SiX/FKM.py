@@ -2,10 +2,10 @@ from sympy import *
 
 init_printing()
 
-def arredNUM(matrix):
+def arredNUM(matrix, n=3):
     for a in preorder_traversal(matrix):
         if isinstance(a, Float):
-            matrix = matrix.subs(a, round(a, 3))
+            matrix = matrix.subs(a, round(a, n))
     return matrix
 
 def A(tn, dn, an, aln):
@@ -217,7 +217,7 @@ class Robot():
         if(rot or pris):
             self.rotational.append(rot)
     
-    def HTM(self, a, b):
+    def HTM(self, a, b, short=True):
         if((a==0) and (b==len(self.T))):
             if(len(self.H)):
                 return abrev(self.H)
@@ -226,7 +226,10 @@ class Robot():
             O = simplify(O@self.T[a+i])
         if((a==0) and (b==len(self.T))):
             self.H = arredNUM(O)
-        return abrev(O)
+        if(short):
+            return abrev(O)
+        else:
+            return O
 
     def POSE(self, joints, links=None):
         if(not len(self.H)):
@@ -244,6 +247,5 @@ class Robot():
                 pose = pose.subs(thetas[i], joints[i])
             else:
                 pose = pose.subs(ds[i], joints[i])
-        pose.simplify()
-        pose = arredNUM(simplify(pose.subs(pi, 3.14159)))
+        pose.evalf().simplify()
         return trigsimp(pose)
