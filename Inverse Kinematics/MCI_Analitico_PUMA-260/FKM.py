@@ -1,4 +1,5 @@
 from sympy import *
+import numpy as np
 
 init_printing()
 
@@ -247,5 +248,5 @@ class Robot():
                 pose = pose.subs(thetas[i], joints[i])
             else:
                 pose = pose.subs(ds[i], joints[i])
-        pose.evalf().simplify()
-        return trigsimp(pose)
+        pose = pose.evalf().simplify()
+        return arredNUM(pose)
