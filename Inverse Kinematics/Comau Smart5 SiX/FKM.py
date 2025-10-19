@@ -197,7 +197,7 @@ class Robot():
         if(rot or pris):
             self.rotational.append(rot)
 
-    def addNonDHLine(self, dx, dy, dz, Rx, Ry, Rz):
+    def addNonDHLine(self, dx, dy, dz, Rx, Ry, Rz, addjoint=False):
         O = Identity(4)
         O = O@Matrix([[1, 0, 0, dx], [0, 1, 0, dy], [0, 0, 1, dz], [0, 0, 0, 1]]) #Translação
         O = O@Matrix([[1, 0, 0, 0], [0, cos(Rx), -sin(Rx), 0], [0, sin(Rx), cos(Rx), 0], [0, 0, 0, 1]]) #Rotação em X
@@ -205,23 +205,27 @@ class Robot():
         O = O@Matrix([[cos(Rz), -sin(Rz), 0, 0], [sin(Rz), cos(Rz), 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]) #Rotação em Z
         O.simplify()
         self.T.append(O)
-        rot = False
-        pris = False
-        try: 
-            float(Rz)
-        except:
-            rot = True
-        try:
-            float(dz)
-        except:
-            pris = True
-        if(rot or pris):
-            self.rotational.append(rot)
+        if(addjoint):
+            rot = False
+            pris = False
+            try: 
+                float(Rz)
+            except:
+                rot = True
+            try:
+                float(dz)
+            except:
+                pris = True
+            if(rot or pris):
+                self.rotational.append(rot)
     
     def HTM(self, a, b, short=True):
         if((a==0) and (b==len(self.T))):
             if(len(self.H)):
-                return abrev(self.H)
+                if(short):
+                    return abrev(self.H)
+                else:
+                    return self.H
         O = Identity(4)
         for i in range(b-a):
             O = simplify(O@self.T[a+i])
