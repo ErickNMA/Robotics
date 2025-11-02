@@ -236,14 +236,17 @@ class Robot():
         else:
             return O
 
-    def POSE(self, joints, links=None):
-        if(not len(self.H)):
-            pose = Identity(4)
-            for i in range(len(joints)):
-                pose = simplify(pose@self.T[i])
-            self.H = pose
+    def POSE(self, joints, links=None, a=0, b=-1):
+        if((a==0) and (b==-1)):
+            if(not len(self.H)):
+                pose = Identity(4)
+                for i in range(len(joints)):
+                    pose = simplify(pose@self.T[i])
+                self.H = pose
+            else:
+                pose = self.H
         else:
-            pose = self.H
+            pose = self.HTM(a, b, False)
         if(links):
             for i in range(len(links)):
                 pose = pose.subs(ls[i], links[i])
